@@ -96,7 +96,10 @@ async function patchSalesforceReport(reportId, folderId, authInfo) {
 // Function to query List Views object
 async function queryListViews(instanceUrl, accessToken, username) {
 	const queryUrl = instanceUrl + '/services/data/v52.0/query';
-	const queryString = 'SELECT DeveloperName,Id,SobjectType,LastModifiedDate,LastReferencedDate,LastViewedDate FROM ListView WHERE SobjectType in (' + '\'Account\',\'Contact\'' + ') AND CREATEDBY.USERNAME=\'' + username + '\'';
+	// get quotes for query
+	const strSobjects = sobjects.split(',').map(item => `'${item}'`).join(',');
+
+	const queryString = 'SELECT DeveloperName,Id,SobjectType,LastModifiedDate,LastReferencedDate,LastViewedDate FROM ListView WHERE SobjectType in (' + strSobjects + ') AND CREATEDBY.USERNAME=\'' + username + '\'';
 	console.log(queryString);
 	const response = await axios.get(
 	queryUrl, 
